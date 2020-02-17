@@ -1,0 +1,16 @@
+[package]
+name = "kcounter"
+version = "0.1.0"
+authors = ["Antonio Camargo <antoniop.camargo@gmail.com>"]
+edition = "2018"
+readme = "README.md"
+homepage = "https://github.com/apcamargo/kcounter"
+keywords = ["kmer", "bioinformatics"]
+
+[lib]
+name = "kcounter"
+crate-type = ["cdylib"]
+
+[dependencies]
+needletail = "0.3.2"
+pyo3 = { version = "0.8.5", features = ["extension-module"] }
