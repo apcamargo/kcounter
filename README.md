@@ -7,11 +7,18 @@ A simple package for counting DNA k-mers in Python. Written in Rust.
 
 ## Instalation
 
+There are two ways to install `kcounter`:
 
-You can install `kcounter` using pip:
+- Using pip:
 
 ```
 pip install kcounter
+```
+
+- Using conda:
+
+```
+conda install -c conda-forge -c bioconda kcounter
 ```
 
 ## Usage
