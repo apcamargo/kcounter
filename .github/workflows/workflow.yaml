@@ -52,7 +52,7 @@ jobs:
       with:
         target: x86_64
         maturin-version: v0.10.6
-        args: --out dist
+        args: --out dist --manylinux 2010
     - name: Install built wheel
       run: |
         pip install kcounter --no-index --find-links dist --force-reinstall --no-dependencies
