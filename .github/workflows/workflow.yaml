@@ -1,41 +1,63 @@
-name: kcounter workflow
-
-on: [push]
-
+name: build wheels
+on: [workflow_dispatch]
 jobs:
-  build:
-    name: Build & test
+  macos:
+    name: Build macOS
+    runs-on: macos-latest
     strategy:
       matrix:
-        platform: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ '3.6', '3.7', '3.8' ]
-    runs-on: ${{ matrix.platform }}
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.0.0
+      uses: actions/checkout@v2.3.3
     - name: rust-toolchain
-      uses: actions-rs/toolchain@v1.0.5
+      uses: actions-rs/toolchain@v1.0.6
       with:
         profile: minimal
-        toolchain: nightly
+        toolchain: stable
         default: true
     - name: Setup Python ${{ matrix.python-version }} environment
-      uses: actions/setup-python@v1.1.1
+      uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Maturin build
-      run: |
-        pip install maturin
-        maturin build --release --interpreter python
-    - name: Install kcounter
-      run: pip install target/wheels/*.whl
-      shell: bash
-    - name: Test
-      run: |
-        pip install pytest
-        pytest
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
+    - name: Build wheels (x86_64)
+      uses: messense/maturin-action@v1
       with:
-        name: build-artifact
-        path: target/wheels
+        target: x86_64
+        maturin-version: v0.10.6
+        args: --interpreter python${{ matrix.python-version }} --release --out dist
+    - name: Install built wheel (x86_64)
+      run: |
+        pip install pycoverm --no-index --find-links dist --force-reinstall --no-dependencies
+        python -c "import pycoverm"
+    - name: Build wheels (universal2)
+      uses: messense/maturin-action@v1
+      with:
+        maturin-version: v0.10.6
+        args: --interpreter python${{ matrix.python-version }} --release --universal2 --out dist
+    - name: Install built wheel (universal2)
+      run: |
+        pip install pycoverm --no-index --find-links dist --force-reinstall --no-dependencies
+        python -c "import pycoverm"
+    - name: Upload wheels
+      uses: actions/upload-artifact@v2
+      with:
+        name: wheels
+        path: dist
+  linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10' ]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
+    - name: Build Wheels
+      uses: messense/maturin-action@v1
+      with:
+        target: x86_64
+        maturin-version: v0.10.6
