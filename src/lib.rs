@@ -44,7 +44,7 @@ fn count_kmers(
     canonical_kmers: bool,
 ) -> PyResult<HashMap<String, f64>> {
     if k < 1 {
-        Err(exceptions::ValueError::py_err(
+        Err(exceptions::PyValueError::new_err(
             "'k' must be a positive integer.",
         ))
     } else {
