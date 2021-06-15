@@ -28,8 +28,8 @@ jobs:
         args: --interpreter python${{ matrix.python-version }} --release --out dist
     - name: Install built wheel (x86_64)
       run: |
-        pip install pycoverm --no-index --find-links dist --force-reinstall --no-dependencies
-        python -c "import pycoverm"
+        pip install kcounter --no-index --find-links dist --force-reinstall --no-dependencies
+        python -c "import kcounter"
     - name: Build wheels (universal2)
       uses: messense/maturin-action@v1
       with:
@@ -37,8 +37,8 @@ jobs:
         args: --interpreter python${{ matrix.python-version }} --release --universal2 --out dist
     - name: Install built wheel (universal2)
       run: |
-        pip install pycoverm --no-index --find-links dist --force-reinstall --no-dependencies
-        python -c "import pycoverm"
+        pip install kcounter --no-index --find-links dist --force-reinstall --no-dependencies
+        python -c "import kcounter"
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
@@ -61,3 +61,7 @@ jobs:
       with:
         target: x86_64
         maturin-version: v0.10.6
+    - name: Install built wheel (universal2)
+      run: |
+        pip install kcounter --no-index --find-links dist --force-reinstall --no-dependencies
+        python -c "import kcounter"
