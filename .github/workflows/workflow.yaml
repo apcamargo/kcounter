@@ -61,4 +61,8 @@ jobs:
     - name: Test
       run: |
         pip install pytest
-        pytest
+    - name: Upload wheels
+      uses: actions/upload-artifact@v2
+      with:
+        name: wheels
+        path: dist
