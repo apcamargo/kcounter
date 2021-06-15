@@ -52,7 +52,8 @@ jobs:
       with:
         target: x86_64
         maturin-version: v0.10.6
-        args: --out dist --manylinux 2010
+        manylinux: auto
+        args: --interpreter python${{ matrix.python-version }} --release --out dist
     - name: Install built wheel
       run: |
         pip install kcounter --no-index --find-links dist --force-reinstall --no-dependencies
